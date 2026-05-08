@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password_hash String
+
+  customerId String?
+  isVip Boolean @default(false)
+
+  created_At DateTime @default(now())
+
+  subjects Subject[]
+}
+
+model Subject {
+  id String @id @default(uuid())
+  title String
+  description String
+  finished DateTime?
+
+  created_At DateTime @default(now())
+
+  user User @relation(fields: [userid], references: [id])
+  userid String
+
+  notes Notes[]
+}
+
+model Notes {
+  id String @id @default(uuid())
+  title String
+  description String
+  codExample String
+  urlExample String
+
+  subject Subject @relation(fields: [subjectid], references: [id])
+  subjectid String
+
+  created_At DateTime @default(now())
+}
+
